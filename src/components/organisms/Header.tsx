@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Button } from '../atoms/Button';
 import { NavLink } from '../atoms/NavLink';
+import Image from 'next/image';
+
 
 export const Header = () => {
   // For now, we use a local state. Later, this will come from your backend.
@@ -11,10 +13,8 @@ export const Header = () => {
     <header className="flex items-center justify-between px-10 py-4 bg-white shadow-sm sticky top-0 z-50">
       {/* Logo Area */}
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-[#002D5B] rounded-full flex items-center justify-center">
-            <span className="text-white text-[10px]">TS</span>
-        </div>
-        <span className="font-bold text-[#002D5B] tracking-tight">TOWN SCOUT</span>
+        
+        <Image src="/logo.svg" alt="Town Scout Logo" width={200} height={35} className="" />
       </div>
 
       {/* Navigation Molecules */}
