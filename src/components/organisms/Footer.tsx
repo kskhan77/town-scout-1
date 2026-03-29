@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { PAGE_SHELL } from '@/lib/pageLayout';
 
 export const Footer = () => {
   return (
@@ -12,7 +13,7 @@ export const Footer = () => {
          <div className="absolute bottom-0 w-full border-b border-gray-100"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-10 py-12">
+      <div className={`${PAGE_SHELL} py-12`}>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 border-t border-gray-100 pt-10">
           
           {/* Column 1: Logo & Mission */}
@@ -62,7 +63,7 @@ export const Footer = () => {
       {/* 2. The Hand-Drawn Mountain Pattern (Bottom Section) */}
       <div className="w-full h-32 relative mt-10">
          {/* This matches the black and white mountain sketches in your image */}
-         <div className="absolute bottom-0 w-full h-full opacity-10 bg-[url('/mountains.svg')] bg-repeat-x bg-contain"></div>
+         <div className="absolute bottom-0 w-full h-full bg-[linear-gradient(180deg,transparent,#e2e8f0)] opacity-60" />
       </div>
     </footer>
   );

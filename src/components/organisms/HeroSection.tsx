@@ -1,9 +1,10 @@
 // src/components/organisms/HeroSection.tsx
 import { Button } from '../atoms/Button';
+import { PAGE_SHELL } from '@/lib/pageLayout';
 
 export const HeroSection = () => {
   return (
-    <section className="relative w-full h-[600px] overflow-hidden flex items-center justify-center">
+    <section className="relative flex h-[min(100vh,640px)] w-full items-center justify-center overflow-hidden md:h-[680px]">
       {/* 1. Background Video */}
       <video
         autoPlay
@@ -20,11 +21,11 @@ export const HeroSection = () => {
       <div className="absolute inset-0 bg-black/40 z-10"></div>
 
       {/* 3. Content Area */}
-      <div className="relative z-20 text-center text-white px-6">
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4">
+      <div className={`relative z-20 text-center text-white ${PAGE_SHELL}`}>
+        <h1 className="mb-4 text-5xl font-extrabold tracking-tighter md:text-7xl">
             TOWN SCOUT
         </h1>
-        <p className="text-lg md:text-xl font-medium mb-8 max-w-2xl mx-auto opacity-90">
+        <p className="mx-auto mb-8 max-w-2xl text-lg font-medium opacity-90 md:text-xl">
             Discovering the heart of your town, one landmark at a time.
         </p>
         
@@ -39,7 +40,7 @@ export const HeroSection = () => {
       </div>
 
       {/* 4. Bottom Wave/Fade (Optional: matches the smooth transition in your design) */}
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-20"></div>
+      <div className="pointer-events-none absolute bottom-0 left-0 z-20 h-28 w-full bg-gradient-to-t from-[#f7f9fc] to-transparent md:h-32" />
     </section>
   );
 };
