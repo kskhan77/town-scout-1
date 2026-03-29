@@ -40,7 +40,7 @@ export const HeroSection = () => {
       </div>
 
       {/* 4. Bottom Wave/Fade (Optional: matches the smooth transition in your design) */}
-      <div className="pointer-events-none absolute bottom-0 left-0 z-20 h-28 w-full bg-gradient-to-t from-[#f7f9fc] to-transparent md:h-32" />
+      <div className="pointer-events-none absolute bottom-0 left-0 z-20 h-28 w-full bg-gradient-to-t from-white to-transparent md:h-32" />
     </section>
   );
 };

@@ -1,121 +1,109 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
 import type { HistorySliderSlide } from "@/lib/data";
 
 interface HistoryImageSliderProps {
   slides: HistorySliderSlide[];
+  index: number;
+  onIndexChange: (index: number) => void;
   className?: string;
 }
 
-export function HistoryImageSlider({ slides, className = "" }: HistoryImageSliderProps) {
-  const [index, setIndex] = useState(0);
+export function HistoryImageSlider({
+  slides,
+  index,
+  onIndexChange,
+  className = "",
+}: HistoryImageSliderProps) {
   const count = slides.length;
-
-  const goNext = useCallback(() => {
-    setIndex((i) => (i + 1) % count);
-  }, [count]);
-
-  const goPrev = useCallback(() => {
-    setIndex((i) => (i - 1 + count) % count);
-  }, [count]);
-
-  useEffect(() => {
-    if (count <= 1) return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mq.matches) return;
-    const id = window.setInterval(goNext, 6500);
-    return () => window.clearInterval(id);
-  }, [count, goNext]);
-
   if (count === 0) return null;
+
+  const active = slides[index];
+  const caption = active.caption ?? active.alt;
+  const story = active.wikiSummary ?? active.alt;
 
   return (
     <div
       className={className}
       role="region"
       aria-roledescription="carousel"
-      aria-label="Flint history imagery"
+      aria-label="Flint historical photograph gallery"
     >
-      <div className="relative aspect-[16/9] w-full max-h-[min(28rem,56vw)] min-h-[200px] overflow-hidden rounded-2xl border border-[#dce3eb] bg-[#e2e8f0] shadow-[0_12px_40px_-12px_rgba(0,45,91,0.18)]">
-        {slides.map((slide, i) => (
+      {/* Large focus panel — no horizontal scroll */}
+      <div className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-2xl border border-[#e2e8f0] bg-[#1a2332] shadow-[0_24px_60px_-20px_rgba(0,45,91,0.35)] md:rounded-3xl">
+        <div className="relative aspect-[16/11] w-full md:aspect-[2/1] lg:aspect-[21/9]">
           <div
-            key={slide.src}
-            className={`absolute inset-0 transition-opacity duration-500 ease-out ${
-              i === index ? "z-10 opacity-100" : "z-0 opacity-0 pointer-events-none"
-            }`}
-            aria-hidden={i !== index}
+            key={active.src}
+            className="history-hero-animate absolute inset-0"
           >
             <Image
-              src={slide.src}
-              alt={slide.alt}
+              src={active.src}
+              alt={active.alt}
               fill
-              className="object-cover"
-              sizes="(max-width: 1280px) 100vw, 1280px"
-              priority={i === 0}
+              className="object-cover object-center grayscale contrast-[1.05] brightness-[0.98]"
+              sizes="(max-width: 1280px) 100vw, 1024px"
+              priority={index === 0}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#002D5B]/85 via-[#002D5B]/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 z-20 px-5 py-4 md:px-8 md:py-5">
-              <p className="text-sm font-semibold leading-snug text-white drop-shadow-sm md:text-base">
-                {slide.caption}
-              </p>
-            </div>
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-[#002D5B]/95 via-[#002D5B]/45 to-transparent"
+              aria-hidden
+            />
           </div>
-        ))}
 
-        <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-30 flex items-center justify-between px-2 md:px-3">
-          <button
-            type="button"
-            onClick={goPrev}
-            className="pointer-events-auto flex size-10 items-center justify-center rounded-full bg-white/90 text-[#002D5B] shadow-md backdrop-blur-sm transition hover:bg-white md:size-11"
-            aria-label="Previous slide"
+          <div
+            key={`caption-${index}`}
+            className="history-caption-animate absolute inset-x-0 bottom-0 z-10 px-5 pb-6 pt-16 md:px-10 md:pb-8 md:pt-24"
           >
-            <span className="sr-only">Previous</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path
-                d="M15 18l-6-6 6-6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={goNext}
-            className="pointer-events-auto flex size-10 items-center justify-center rounded-full bg-white/90 text-[#002D5B] shadow-md backdrop-blur-sm transition hover:bg-white md:size-11"
-            aria-label="Next slide"
-          >
-            <span className="sr-only">Next</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path
-                d="M9 18l6-6-6-6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300/95">
+              Flint, Michigan · archive
+            </p>
+            <h3 className="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-white md:text-3xl lg:text-4xl">
+              {caption}
+            </h3>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/90 md:text-base">
+              {story}
+            </p>
+            <p className="mt-4 text-xs font-medium text-white/55">
+              {index + 1} of {count}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="mt-4 flex justify-center gap-2" role="tablist" aria-label="Slide indicators">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            role="tab"
-            aria-selected={i === index}
-            aria-label={`Slide ${i + 1} of ${count}`}
-            onClick={() => setIndex(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === index ? "w-9 bg-[#002D5B]" : "w-2 bg-[#c5ced9] hover:bg-[#9aa5b4]"
-            }`}
-          />
-        ))}
+      {/* Thumbnails: wrap — no overflow scroll */}
+      <div className="mt-8">
+        <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-neutral-500 md:text-left">
+          Select a photo
+        </p>
+        <ul className="flex flex-wrap justify-center gap-2.5 md:justify-start md:gap-3">
+          {slides.map((slide, i) => {
+            const isActive = i === index;
+            return (
+              <li key={slide.src}>
+                <button
+                  type="button"
+                  onClick={() => onIndexChange(i)}
+                  aria-label={`Photo ${i + 1} of ${count}: ${slide.alt}`}
+                  aria-current={isActive ? "true" : undefined}
+                  className={`relative size-[3.25rem] overflow-hidden rounded-xl border-2 shadow-md transition-all duration-300 ease-out sm:size-14 md:size-16 ${
+                    isActive
+                      ? "z-10 scale-105 border-cyan-400 ring-2 ring-cyan-400/40 ring-offset-2 ring-offset-white"
+                      : "border-white opacity-80 hover:scale-105 hover:opacity-100"
+                  } `}
+                >
+                  <Image
+                    src={slide.src}
+                    alt=""
+                    fill
+                    className="object-cover grayscale"
+                    sizes="64px"
+                  />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { LandmarkCard } from "@/components/molecules/LandmarkCard";
 import type { Landmark } from "@/lib/data";
 import { PAGE_SHELL } from "@/lib/pageLayout";
 
-export type SpotlightVariant = "history" | "happening";
+export type SpotlightVariant = "history" | "happening" | "landmark";
 
 interface SpotlightSectionProps {
   title: string;
