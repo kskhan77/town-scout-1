@@ -88,8 +88,8 @@ export function HistoryImageSlider({
                   aria-current={isActive ? "true" : undefined}
                   className={`relative size-[3.25rem] overflow-hidden rounded-xl border-2 shadow-md transition-all duration-300 ease-out sm:size-14 md:size-16 ${
                     isActive
-                      ? "z-10 scale-105 border-cyan-400 ring-2 ring-cyan-400/40 ring-offset-2 ring-offset-white"
-                      : "border-white opacity-80 hover:scale-105 hover:opacity-100"
+                      ? "z-10 scale-110 border-cyan-400 ring-2 ring-cyan-400/40 ring-offset-2 ring-offset-white"
+                      : "border-white opacity-30 hover:scale-105 hover:opacity-100"
                   } `}
                 >
                   <Image

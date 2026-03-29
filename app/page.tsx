@@ -8,9 +8,10 @@ export default function Home() {
   return (
     <main className="w-full bg-[#f7f9fc] text-neutral-900">
       <HeroSection />
-      <DiscoverHistory />
+
       <HistoricLandmarks />
       <WhatsHappeningNow />
+      <DiscoverHistory />
       <CommunitySignup />
     </main>
   );
