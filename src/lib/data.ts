@@ -138,7 +138,7 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
 export const historicLandmarksOfFlint: Landmark[] = [
   {
     title: "Flint Cultural Center",
-    image: "/train.svg",
+    image: "/whiting.svg",
     tags: ["Local Artists", "Live Music", "Food Trucks"],
   },
   {
@@ -157,7 +157,7 @@ export const historicLandmarksOfFlint: Landmark[] = [
 export const happeningNowSpotlights: Landmark[] = [
   {
     title: "Flint Cultural Center",
-    image: "/train.svg",
+    image: "/whiting.svg",
     tags: ["Local artists & exhibits", "Live music series", "Family programs"],
   },
   {
