@@ -26,3 +26,16 @@ model User {
 
   @@map("users")
 }
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  date        DateTime
+  location    String
+  description String
+  image       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("events")
+}
