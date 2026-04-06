@@ -3,9 +3,19 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+/** Auth.js requires a secret. In production set AUTH_SECRET in .env.local (32+ random bytes). */
+function resolveAuthSecret(): string | undefined {
+  const fromEnv = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+  if (fromEnv) return fromEnv;
+  if (process.env.NODE_ENV === "development") {
+    return "dev-only-townscout-auth-secret-min-32-characters-long";
+  }
+  return undefined;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  secret: resolveAuthSecret(),
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
