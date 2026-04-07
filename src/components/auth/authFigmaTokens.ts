@@ -22,6 +22,10 @@ export const loginLabelClass =
 export const authSlidePrimaryCtaClass =
   "w-full rounded-xl bg-gradient-to-r from-[#002d5b] to-[#0e7490] py-2.5 text-sm font-semibold text-white shadow-md shadow-[#002d5b]/15 transition hover:brightness-[1.03] active:scale-[0.99] disabled:opacity-60 disabled:active:scale-100";
 
+/** Same gradient CTA as slide auth, for inline actions (e.g. profile save). */
+export const authPrimaryCtaInlineClass =
+  "inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#002d5b] to-[#0e7490] px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#002d5b]/15 transition hover:brightness-[1.03] active:scale-[0.99] disabled:opacity-60 disabled:active:scale-100";
+
 /** Sliding auth: visible border + Town Scout tinted field background. */
 export const authSlideInputClass =
   "h-10 w-full rounded-full border-2 border-[#002d5b]/35 bg-[#e8f6fa] px-4 text-sm text-[#0f172a] shadow-sm outline-none transition placeholder:text-slate-500 focus:border-[#00ccf4] focus:bg-white focus:ring-2 focus:ring-[#00ccf4]/30";

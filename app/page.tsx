@@ -6,7 +6,7 @@ import { CommunitySignup } from "@/components/organisms/CommunitySignup";
 
 export default function Home() {
   return (
-    <main className="w-full bg-[#f7f9fc] text-neutral-900">
+    <main className="w-full bg-[#f3f6fa] text-slate-900">
       <HeroSection />
 
       <HistoricLandmarks />

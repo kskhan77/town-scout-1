@@ -8,7 +8,7 @@ export function WhatsHappeningNow() {
       subtitle="Your town, your schedule"
       items={happeningNowSpotlights}
       variant="happening"
-      className="bg-white"
+      className="border-y border-slate-200/70 bg-white"
     />
   );
 }

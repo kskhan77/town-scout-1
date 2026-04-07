@@ -5,6 +5,11 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
 import { getUserInitials } from "@/lib/userDisplay";
+import {
+  authPrimaryCtaInlineClass,
+  authSlideInputClass,
+  authSlideLabelClass,
+} from "@/components/auth/authFigmaTokens";
 
 type ProfileEditFormProps = {
   initialName: string;
@@ -13,9 +18,9 @@ type ProfileEditFormProps = {
   isAdmin: boolean;
 };
 
-const inputClass =
-  "mt-1.5 w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-sm text-[#002D5B] shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100";
-const labelClass = "text-sm font-semibold text-[#334155]";
+/** Same chrome as editable fields; cursor shows it can’t be edited here. */
+const inputReadonlyClass = `${authSlideInputClass} mt-1.5 cursor-not-allowed`;
+const inputEditableClass = `${authSlideInputClass} mt-1.5`;
 
 export function ProfileEditForm({
   initialName,
@@ -98,7 +103,7 @@ export function ProfileEditForm({
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3.5">
         {error ? (
           <p
             className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
@@ -114,7 +119,7 @@ export function ProfileEditForm({
         ) : null}
 
         <div>
-          <label htmlFor="profile-name" className={labelClass}>
+          <label htmlFor="profile-name" className={authSlideLabelClass}>
             Display name
           </label>
           <input
@@ -124,20 +129,20 @@ export function ProfileEditForm({
             autoComplete="name"
             required
             maxLength={160}
-            className={inputClass}
+            className={inputEditableClass}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
 
         <div>
-          <label htmlFor="profile-email" className={labelClass}>
+          <label htmlFor="profile-email" className={authSlideLabelClass}>
             Email
           </label>
           <input
             id="profile-email"
             type="email"
-            className={`${inputClass} cursor-not-allowed bg-neutral-50 text-neutral-600`}
+            className={inputReadonlyClass}
             value={initialEmail}
             readOnly
             aria-readonly="true"
@@ -145,7 +150,7 @@ export function ProfileEditForm({
         </div>
 
         <div>
-          <label htmlFor="profile-zip" className={labelClass}>
+          <label htmlFor="profile-zip" className={authSlideLabelClass}>
             ZIP code (Flint area)
           </label>
           <input
@@ -156,26 +161,22 @@ export function ProfileEditForm({
             autoComplete="postal-code"
             maxLength={10}
             placeholder="48502 or leave blank"
-            className={inputClass}
+            className={inputEditableClass}
             value={zipCode}
             onChange={(e) => setZipCode(e.target.value)}
           />
-          <p className="mt-1.5 text-xs text-neutral-500">
+          <p className="mt-1.5 text-xs font-medium text-[#002d5b]/80">
             Optional. Must be a ZIP we currently serve, or clear the field.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3 pt-2">
-          <button
-            type="submit"
-            disabled={loading}
-            className="inline-flex items-center justify-center rounded-full bg-[#00ccf4] px-6 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#00b8e6] disabled:opacity-60"
-          >
+        <div className="flex flex-wrap gap-3 pt-1">
+          <button type="submit" disabled={loading} className={authPrimaryCtaInlineClass}>
             {loading ? "Saving…" : "Save changes"}
           </button>
           <Link
             href="/"
-            className="inline-flex items-center justify-center rounded-full border border-neutral-200 px-5 py-2.5 text-sm font-semibold text-[#002D5B] transition hover:border-cyan-300 hover:bg-cyan-50"
+            className="inline-flex items-center justify-center rounded-full border-2 border-[#002d5b]/25 bg-[#e8f6fa] px-5 py-2.5 text-sm font-semibold text-[#002D5B] transition hover:border-[#00ccf4] hover:bg-white"
           >
             Cancel
           </Link>

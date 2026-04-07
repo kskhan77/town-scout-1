@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { HistoryImageSlider } from "@/components/molecules/HistoryImageSlider";
 import { flintHistorySliderSlides } from "@/lib/data";
-import { PAGE_SHELL } from "@/lib/pageLayout";
+import { PAGE_SHELL, SECTION_PAD_Y } from "@/lib/pageLayout";
 
 type DiscoverHistorySectionProps = {
   /** Controlled index when used with the history map (e.g. `/history`). */
@@ -24,9 +24,13 @@ export function DiscoverHistorySection({
   autoAdvance = true,
   disablePageShell = false,
   className = "",
-  sectionClassName = "",
+  sectionClassName,
   headingId,
 }: DiscoverHistorySectionProps = {}) {
+  const sectionSurface =
+    sectionClassName != null && sectionClassName.trim() !== ""
+      ? sectionClassName
+      : "bg-white";
   const count = flintHistorySliderSlides.length;
   const [internalIndex, setInternalIndex] = useState(0);
   const controlled =
@@ -67,20 +71,20 @@ export function DiscoverHistorySection({
 
   return (
     <section
-      className={`w-full bg-white text-neutral-900 ${sectionClassName} ${className}`.trim()}
+      className={`w-full text-slate-900 ${sectionSurface} ${className}`.trim()}
       aria-labelledby={h2Id}
     >
       <div
-        className={`${shell} ${disablePageShell ? "py-8 md:py-10 lg:py-12" : "py-16 md:py-20 lg:py-24"}`}
+        className={`${shell} ${disablePageShell ? "py-6 md:py-8 lg:py-10" : SECTION_PAD_Y}`}
       >
-        <div className="mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-start md:justify-between">
+        <div className="mb-8 flex flex-col gap-6 md:mb-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-3xl">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-600 md:text-sm">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#0ea5c4] md:text-sm">
               Old image gallery for Flint MI
             </p>
             <h2
               id={h2Id}
-              className="text-3xl font-black uppercase tracking-tight text-[#002D5B] md:text-4xl lg:text-[2.5rem] lg:leading-tight"
+              className="text-3xl font-black uppercase tracking-tight text-[#002d5b] md:text-4xl lg:text-[2.5rem] lg:leading-tight"
             >
               Discover the History
             </h2>
