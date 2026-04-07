@@ -74,10 +74,15 @@ export const flintStaticMapPlaces: StaticMapPlace[] = [
   },
 ];
 
-export const categoryPinColors: Record<StaticPlaceCategory | "event", string> = {
+export const categoryPinColors: Record<
+  StaticPlaceCategory | "event" | "ticketmaster",
+  string
+> = {
   historic: "#e53e3e",
   culture: "#805ad5",
   park: "#38a169",
   transport: "#3182ce",
   event: "#00ccf4",
+  /** Discovery API / concerts & shows */
+  ticketmaster: "#ed8936",
 };

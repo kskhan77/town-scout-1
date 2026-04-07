@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { FLINT_MAP_CENTER, categoryPinColors, flintStaticMapPlaces } from "@/lib/flintMapPlaces";
+import type { MapEventPoint } from "@/lib/mapEventPoint";
 import {
   FLINT_MAP_POPUP_OPTIONS,
   flintMapPinIcon,
@@ -25,16 +26,7 @@ function categoryLabel(
   return map[kind];
 }
 
-export type MapEventPoint = {
-  id: string;
-  title: string;
-  date: string;
-  location: string;
-  description?: string | null;
-  image?: string | null;
-  latitude?: number | null;
-  longitude?: number | null;
-};
+export type { MapEventPoint } from "@/lib/mapEventPoint";
 
 interface FlintEventsMapInnerProps {
   events: MapEventPoint[];
@@ -179,7 +171,11 @@ export default function FlintEventsMapInner({
         if (lat == null || lng == null) continue;
         if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
 
-        const color = categoryPinColors.event;
+        const isTicketmaster = ev.source === "ticketmaster";
+        const color = isTicketmaster
+          ? categoryPinColors.ticketmaster
+          : categoryPinColors.event;
+        const badge = isTicketmaster ? "Live show" : "Event";
         const m = L.marker([lat, lng], { icon: flintMapPinIcon(color, pinSize) });
         const when = new Date(ev.date).toLocaleString("en-US", {
           weekday: "short",
@@ -190,10 +186,12 @@ export default function FlintEventsMapInner({
         });
         const img = safeMapImageUrl(ev.image ?? null);
         const desc = ev.description?.trim() ?? "";
+        const linkUrl =
+          ev.url && /^https:\/\//i.test(ev.url.trim()) ? ev.url.trim() : null;
 
         m.bindTooltip(
           flintMapTooltipHtml({
-            badge: "Event",
+            badge,
             title: ev.title,
             subtitle: when,
             imageUrl: img,
@@ -209,12 +207,14 @@ export default function FlintEventsMapInner({
         );
         m.bindPopup(
           flintMapPopupHtml({
-            badge: "Event",
+            badge,
             title: ev.title,
             metaLines: [when, ev.location],
             description: desc,
             imageUrl: img,
             accent: color,
+            linkUrl,
+            linkLabel: isTicketmaster ? "Details & tickets" : "Open link",
           }),
           FLINT_MAP_POPUP_OPTIONS,
         );

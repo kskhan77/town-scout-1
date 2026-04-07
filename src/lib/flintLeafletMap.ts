@@ -75,6 +75,8 @@ export function flintMapPopupHtml(params: {
   description: string;
   imageUrl: string | null;
   accent: string;
+  linkUrl?: string | null;
+  linkLabel?: string;
 }): string {
   const hero = params.imageUrl
     ? `<div class="ts-map-pop__hero"><img src="${esc(params.imageUrl)}" alt="" /></div>`
@@ -86,6 +88,10 @@ export function flintMapPopupHtml(params: {
   const desc = params.description
     ? `<p class="ts-map-pop__desc">${esc(truncate(params.description, 220))}</p>`
     : "";
+  const link =
+    params.linkUrl && /^https:\/\//i.test(params.linkUrl.trim())
+      ? `<p class="ts-map-pop__link-wrap"><a class="ts-map-pop__link" href="${esc(params.linkUrl.trim())}" target="_blank" rel="noopener noreferrer">${esc(params.linkLabel ?? "Details & tickets")}</a></p>`
+      : "";
   return `<div class="ts-map-pop">
     ${hero}
     <div class="ts-map-pop__body">
@@ -93,6 +99,7 @@ export function flintMapPopupHtml(params: {
       <h3 class="ts-map-pop__title">${esc(params.title)}</h3>
       <div class="ts-map-pop__meta">${meta}</div>
       ${desc}
+      ${link}
     </div>
   </div>`;
 }

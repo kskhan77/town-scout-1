@@ -282,3 +282,20 @@ body {
   line-height: 1.45;
   color: #475569;
 }
+
+.ts-map-pop__link-wrap {
+  margin: 12px 0 0;
+}
+
+.ts-map-pop__link {
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  color: #002d5b;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ts-map-pop__link:hover {
+  color: #0e7490;
+}

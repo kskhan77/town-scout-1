@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
+import { fetchTicketmasterMapEvents } from "@/lib/externalEvents/ticketmaster";
 import { prisma } from "@/lib/prisma";
+import type { MapEventPoint } from "@/lib/mapEventPoint";
 
 /**
- * Map-friendly event list: always returns latitude/longitude from the DB,
- * even if `prisma generate` is temporarily out of sync with the schema.
+ * Map-friendly events: Prisma rows (your listings) + optional Ticketmaster shows near Flint.
+ * Set TICKETMASTER_API_KEY in .env.local (Discovery API consumer key).
  */
 export async function GET() {
   const rows = await prisma.$queryRaw<
@@ -24,16 +26,28 @@ export async function GET() {
     ORDER BY date ASC
   `);
 
-  return NextResponse.json(
-    rows.map((r) => ({
-      id: r.id,
-      title: r.title,
-      date: r.date.toISOString(),
-      location: r.location,
-      description: r.description,
-      image: r.image,
-      latitude: r.latitude,
-      longitude: r.longitude,
-    })),
-  );
+  const dbPoints: MapEventPoint[] = rows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    date: r.date.toISOString(),
+    location: r.location,
+    description: r.description,
+    image: r.image,
+    latitude: r.latitude,
+    longitude: r.longitude,
+    source: "db",
+    url: null,
+  }));
+
+  let tmPoints: MapEventPoint[] = [];
+  const tmKey = process.env.TICKETMASTER_API_KEY?.trim();
+  if (tmKey) {
+    try {
+      tmPoints = await fetchTicketmasterMapEvents(tmKey);
+    } catch {
+      tmPoints = [];
+    }
+  }
+
+  return NextResponse.json([...dbPoints, ...tmPoints]);
 }
