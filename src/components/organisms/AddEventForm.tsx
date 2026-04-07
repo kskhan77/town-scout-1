@@ -38,6 +38,37 @@ export function AddEventForm({ loading, error, onSubmit }: AddEventFormProps) {
           <label htmlFor="add-image" className={labelClass}>Image URL (optional)</label>
           <input id="add-image" name="image" className={inputClass} />
         </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="add-latitude" className={labelClass}>
+              Latitude (optional, for map)
+            </label>
+            <input
+              id="add-latitude"
+              name="latitude"
+              type="text"
+              inputMode="decimal"
+              placeholder="e.g. 43.0151"
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="add-longitude" className={labelClass}>
+              Longitude (optional)
+            </label>
+            <input
+              id="add-longitude"
+              name="longitude"
+              type="text"
+              inputMode="decimal"
+              placeholder="e.g. -83.6897"
+              className={inputClass}
+            />
+          </div>
+        </div>
+        <p className="text-xs text-neutral-500">
+          Use both coordinates to pin this event on the Flint map (WGS84). Leave blank if unknown.
+        </p>
       </div>
 
       <button

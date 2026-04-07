@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { EventCard, type EventItem } from "@/components/molecules/EventCard";
 import { AddEventForm } from "@/components/organisms/AddEventForm";
 import { EditEventModal } from "@/components/organisms/EditEventModal";
 
 export function EventsSection() {
+  const { status } = useSession();
+  const canManage = status === "authenticated";
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -15,11 +18,18 @@ export function EventsSection() {
     const res = await fetch("/api/events");
     const data = await res.json();
     setEvents(data);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("townscout-events-refresh"));
+    }
   }
 
   useEffect(() => {
     loadEvents();
   }, []);
+
+  useEffect(() => {
+    if (!canManage) setEditingEvent(null);
+  }, [canManage]);
 
   async function handleAdd(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,6 +43,8 @@ export function EventsSection() {
       location: (form.elements.namedItem("location") as HTMLInputElement).value,
       description: (form.elements.namedItem("description") as HTMLTextAreaElement).value,
       image: (form.elements.namedItem("image") as HTMLInputElement).value || undefined,
+      latitude: (form.elements.namedItem("latitude") as HTMLInputElement).value,
+      longitude: (form.elements.namedItem("longitude") as HTMLInputElement).value,
     };
 
     const res = await fetch("/api/events", {
@@ -64,6 +76,8 @@ export function EventsSection() {
       location: (form.elements.namedItem("location") as HTMLInputElement).value,
       description: (form.elements.namedItem("description") as HTMLTextAreaElement).value,
       image: (form.elements.namedItem("image") as HTMLInputElement).value || undefined,
+      latitude: (form.elements.namedItem("latitude") as HTMLInputElement).value,
+      longitude: (form.elements.namedItem("longitude") as HTMLInputElement).value,
     };
 
     await fetch(`/api/events/${editingEvent.id}`, {
@@ -95,12 +109,13 @@ export function EventsSection() {
               event={event}
               onEdit={setEditingEvent}
               onDelete={handleDelete}
+              showActions={canManage}
             />
           ))}
         </ul>
       )}
 
-      {editingEvent && (
+      {canManage && editingEvent && (
         <EditEventModal
           event={editingEvent}
           loading={loading}
@@ -109,7 +124,7 @@ export function EventsSection() {
         />
       )}
 
-      <AddEventForm loading={loading} error={error} onSubmit={handleAdd} />
+      {canManage ? <AddEventForm loading={loading} error={error} onSubmit={handleAdd} /> : null}
     </>
   );
 }

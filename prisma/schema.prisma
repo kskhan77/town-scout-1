@@ -20,6 +20,7 @@ model User {
   email        String   @unique
   passwordHash String   @map("password_hash")
   name         String?
+  zipCode      String?  @map("zip_code")
   role         UserRole @default(user)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -34,6 +35,8 @@ model Event {
   location    String
   description String
   image       String?
+  latitude    Float?
+  longitude   Float?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 

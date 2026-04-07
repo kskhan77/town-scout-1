@@ -43,6 +43,34 @@ export function EditEventModal({ event, loading, onSave, onCancel }: EditEventMo
             <label htmlFor="image" className={labelClass}>Image URL (optional)</label>
             <input id="image" name="image" defaultValue={event.image ?? ""} className={inputClass} />
           </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="latitude" className={labelClass}>
+                Latitude (map)
+              </label>
+              <input
+                id="latitude"
+                name="latitude"
+                type="text"
+                inputMode="decimal"
+                defaultValue={event.latitude != null ? String(event.latitude) : ""}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="longitude" className={labelClass}>
+                Longitude (map)
+              </label>
+              <input
+                id="longitude"
+                name="longitude"
+                type="text"
+                inputMode="decimal"
+                defaultValue={event.longitude != null ? String(event.longitude) : ""}
+                className={inputClass}
+              />
+            </div>
+          </div>
         </div>
         <div className="mt-6 flex gap-3">
           <button

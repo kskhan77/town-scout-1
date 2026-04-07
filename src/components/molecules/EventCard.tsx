@@ -7,15 +7,24 @@ export type EventItem = {
   location: string;
   description: string;
   image?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 interface EventCardProps {
   event: EventItem;
   onEdit: (event: EventItem) => void;
   onDelete: (id: string) => void;
+  /** When false, Edit/Delete are hidden (e.g. for guests). */
+  showActions?: boolean;
 }
 
-export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
+export function EventCard({
+  event,
+  onEdit,
+  onDelete,
+  showActions = false,
+}: EventCardProps) {
   return (
     <li className="flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-md">
       {event.image && (
@@ -35,21 +44,28 @@ export function EventCard({ event, onEdit, onDelete }: EventCardProps) {
       </p>
       <h2 className="mt-1 text-lg font-bold text-[#002D5B]">{event.title}</h2>
       <p className="mt-1 text-sm text-gray-500">{event.location}</p>
+      {event.latitude != null && event.longitude != null ? (
+        <p className="mt-1 text-xs text-cyan-700">Shown on map · {event.latitude.toFixed(4)}, {event.longitude.toFixed(4)}</p>
+      ) : null}
       <p className="mt-3 text-sm text-gray-600">{event.description}</p>
-      <div className="mt-4 flex gap-2">
-        <button
-          onClick={() => onEdit(event)}
-          className="rounded-full border border-cyan-400 px-4 py-1.5 text-xs font-semibold text-green-600 hover:bg-cyan-50"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => onDelete(event.id)}
-          className="rounded-full border border-red-300 px-4 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-50"
-        >
-          Delete
-        </button>
-      </div>
+      {showActions ? (
+        <div className="mt-4 flex gap-2">
+          <button
+            type="button"
+            onClick={() => onEdit(event)}
+            className="rounded-full border border-cyan-400 px-4 py-1.5 text-xs font-semibold text-green-600 hover:bg-cyan-50"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(event.id)}
+            className="rounded-full border border-red-300 px-4 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </div>
+      ) : null}
     </li>
   );
 }

@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { Button } from "@/components/atoms/Button";
 import { AuthFormShell } from "@/components/auth/AuthFormShell";
+import { loginInputClass, loginLabelClass } from "@/components/auth/authFigmaTokens";
 import Link from "next/link";
 
 export function LoginForm() {
@@ -14,6 +15,7 @@ export function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -46,29 +48,51 @@ export function LoginForm() {
 
   return (
     <AuthFormShell
-      title="Log in"
-      subtitle="Welcome back, Scout. Use the email and password for your Town Scout account."
-      footer={
+      layoutVariant="login"
+      title="Sign in"
+      subtitle={
         <>
-          No account yet?{" "}
-          <Link href="/signup" className="font-semibold text-[#002D5B] hover:text-cyan-600">
-            Sign up
+          <span className="font-normal">New user? </span>
+          <Link href="/signup" className="font-medium text-[#111] hover:underline">
+            Create an account
           </Link>
         </>
       }
+      footer={
+        <span className="text-xs text-neutral-500">
+          Use the email and password for your Town Scout account.
+        </span>
+      }
+      leading={
+        <div className="relative hidden w-full max-w-[662px] lg:block">
+          <div
+            className="relative w-full overflow-hidden rounded-[27px] border border-black/25 bg-neutral-100 shadow-[9px_11px_17.6px_2px_rgba(0,0,0,0.25)]"
+            style={{ aspectRatio: "662 / 534" }}
+          >
+            <Image
+              src="/images/login-hero.png"
+              alt="Downtown Flint — aerial view"
+              fill
+              className="object-cover object-center"
+              sizes="(min-width: 1024px) 662px, 100vw"
+              priority
+            />
+          </div>
+        </div>
+      }
     >
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="w-full max-w-[415px]">
         {error ? (
           <p
-            className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+            className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
             role="alert"
           >
             {error}
           </p>
         ) : null}
         <div>
-          <label htmlFor="login-email" className="mb-1.5 block text-sm font-semibold text-[#002D5B]">
-            Email
+          <label htmlFor="login-email" className={loginLabelClass}>
+            Username or Email*
           </label>
           <input
             id="login-email"
@@ -76,14 +100,15 @@ export function LoginForm() {
             type="email"
             autoComplete="email"
             required
+            placeholder="john@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-full border border-gray-200 px-4 py-3 text-neutral-900 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200"
+            className={loginInputClass}
           />
         </div>
-        <div>
-          <label htmlFor="login-password" className="mb-1.5 block text-sm font-semibold text-[#002D5B]">
-            Password
+        <div className="mt-8">
+          <label htmlFor="login-password" className={loginLabelClass}>
+            Password*
           </label>
           <input
             id="login-password"
@@ -91,14 +116,38 @@ export function LoginForm() {
             type="password"
             autoComplete="current-password"
             required
+            placeholder="•••••••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-full border border-gray-200 px-4 py-3 text-neutral-900 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200"
+            className={loginInputClass}
           />
         </div>
-        <Button type="submit" variant="primary" className="w-full py-3" disabled={loading}>
-          {loading ? "Signing in…" : "Log in"}
-        </Button>
+        <div className="mt-6 flex justify-end">
+          <label className="flex cursor-pointer items-center gap-2 text-base text-[#555]">
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+              className="size-5 rounded-sm border border-[#eeeeee] text-[#00ccf4] focus:ring-[#00ccf4]"
+            />
+            Remember me
+          </label>
+        </div>
+        <div className="mt-6 flex w-full max-w-[386px] flex-wrap items-center justify-between gap-4">
+          <button
+            type="button"
+            className="text-base font-medium text-[#111] hover:underline"
+          >
+            Forgot Password?
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex h-[46px] w-[102px] shrink-0 items-center justify-center rounded-md bg-[#00ccf4] text-[15px] font-bold text-white transition hover:bg-[#00b8e6] disabled:opacity-60"
+          >
+            {loading ? "…" : "Login"}
+          </button>
+        </div>
       </form>
     </AuthFormShell>
   );
