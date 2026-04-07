@@ -42,9 +42,9 @@ export const Header = () => {
             <Image
               src="/logo.svg"
               alt="Town Scout"
-              width={200}
-              height={35}
-              className="h-7 w-auto max-w-[118px] object-contain object-left sm:max-w-[150px] md:h-[35px] md:max-w-[200px]"
+              width={300}
+              height={55}
+              className="h-9 w-auto max-w-[152px] object-contain object-left sm:h-10 sm:max-w-[180px] md:h-11 md:max-w-[220px]"
               priority
             />
           </Link>

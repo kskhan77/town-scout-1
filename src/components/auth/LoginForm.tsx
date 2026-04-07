@@ -64,9 +64,9 @@ export function LoginForm() {
         </span>
       }
       leading={
-        <div className="relative hidden w-full max-w-[662px] lg:block">
+        <div className="relative w-full">
           <div
-            className="relative w-full overflow-hidden rounded-[27px] border border-black/25 bg-neutral-100 shadow-[9px_11px_17.6px_2px_rgba(0,0,0,0.25)]"
+            className="relative w-full overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-100 shadow-md sm:rounded-[27px] sm:shadow-[9px_11px_17.6px_2px_rgba(0,0,0,0.2)]"
             style={{ aspectRatio: "662 / 534" }}
           >
             <Image
@@ -74,14 +74,14 @@ export function LoginForm() {
               alt="Downtown Flint — aerial view"
               fill
               className="object-cover object-center"
-              sizes="(min-width: 1024px) 662px, 100vw"
+              sizes="(min-width: 1024px) 38vw, (min-width: 640px) 90vw, 100vw"
               priority
             />
           </div>
         </div>
       }
     >
-      <form onSubmit={handleSubmit} className="w-full max-w-[415px]">
+      <form onSubmit={handleSubmit} className="w-full">
         {error ? (
           <p
             className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
@@ -123,17 +123,17 @@ export function LoginForm() {
           />
         </div>
         <div className="mt-6 flex justify-end">
-          <label className="flex cursor-pointer items-center gap-2 text-base text-[#555]">
+          <label className="flex cursor-pointer items-center gap-2.5 text-sm text-slate-600 sm:text-base">
             <input
               type="checkbox"
               checked={remember}
               onChange={(e) => setRemember(e.target.checked)}
-              className="size-5 rounded-sm border border-[#eeeeee] text-[#00ccf4] focus:ring-[#00ccf4]"
+              className="size-4 shrink-0 rounded border border-slate-300 text-cyan-500 accent-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/30 sm:size-5"
             />
             Remember me
           </label>
         </div>
-        <div className="mt-6 flex w-full max-w-[386px] flex-wrap items-center justify-between gap-4">
+        <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-4">
           <button
             type="button"
             className="text-base font-medium text-[#111] hover:underline"
@@ -143,7 +143,7 @@ export function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="flex h-[46px] w-[102px] shrink-0 items-center justify-center rounded-md bg-[#00ccf4] text-[15px] font-bold text-white transition hover:bg-[#00b8e6] disabled:opacity-60"
+            className="flex h-11 min-w-[6.5rem] shrink-0 items-center justify-center rounded-xl bg-cyan-400 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-500 disabled:opacity-60"
           >
             {loading ? "…" : "Login"}
           </button>
