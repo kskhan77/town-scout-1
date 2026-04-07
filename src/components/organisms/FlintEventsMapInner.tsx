@@ -42,6 +42,29 @@ interface FlintEventsMapInnerProps {
   showEvents: boolean;
 }
 
+function collectVisibleLatLngs(
+  showHistoric: boolean,
+  showEvents: boolean,
+  events: MapEventPoint[],
+): L.LatLng[] {
+  const pts: L.LatLng[] = [];
+  if (showHistoric) {
+    for (const p of flintStaticMapPlaces) {
+      pts.push(L.latLng(p.lat, p.lng));
+    }
+  }
+  if (showEvents) {
+    for (const ev of events) {
+      const lat = ev.latitude;
+      const lng = ev.longitude;
+      if (lat == null || lng == null) continue;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+      pts.push(L.latLng(lat, lng));
+    }
+  }
+  return pts;
+}
+
 export default function FlintEventsMapInner({
   events,
   showHistoric,
@@ -56,10 +79,13 @@ export default function FlintEventsMapInner({
     const el = containerRef.current;
     if (!el || mapRef.current) return;
 
+    const initialZoom =
+      typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches ? 13 : 12;
+
     const map = L.map(el, {
       scrollWheelZoom: true,
       zoomControl: true,
-    }).setView(FLINT_MAP_CENTER, 12);
+    }).setView(FLINT_MAP_CENTER, initialZoom);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
@@ -106,10 +132,14 @@ export default function FlintEventsMapInner({
 
     group.clearLayers();
 
+    const narrow =
+      typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+    const pinSize = narrow ? "mobile" : "default";
+
     if (showHistoric) {
       for (const p of flintStaticMapPlaces) {
         const color = categoryPinColors[p.category];
-        const m = L.marker([p.lat, p.lng], { icon: flintMapPinIcon(color) });
+        const m = L.marker([p.lat, p.lng], { icon: flintMapPinIcon(color, pinSize) });
         const img = safeMapImageUrl(p.image);
         m.bindTooltip(
           flintMapTooltipHtml({
@@ -150,7 +180,7 @@ export default function FlintEventsMapInner({
         if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
 
         const color = categoryPinColors.event;
-        const m = L.marker([lat, lng], { icon: flintMapPinIcon(color) });
+        const m = L.marker([lat, lng], { icon: flintMapPinIcon(color, pinSize) });
         const when = new Date(ev.date).toLocaleString("en-US", {
           weekday: "short",
           month: "short",
@@ -189,6 +219,27 @@ export default function FlintEventsMapInner({
           FLINT_MAP_POPUP_OPTIONS,
         );
         m.addTo(group);
+      }
+    }
+
+    const map = mapRef.current;
+    if (map) {
+      const pts = collectVisibleLatLngs(showHistoric, showEvents, events);
+      if (pts.length === 1) {
+        map.setView(pts[0], narrow ? 15 : 14, { animate: false });
+        window.setTimeout(() => map.invalidateSize({ animate: false }), 50);
+      } else if (pts.length > 1) {
+        const bounds = L.latLngBounds(pts);
+        map.fitBounds(bounds, {
+          padding: narrow ? [20, 20] : [40, 40],
+          maxZoom: narrow ? 15 : 14,
+          animate: false,
+        });
+        window.setTimeout(() => {
+          map.invalidateSize({ animate: false });
+        }, 50);
+      } else {
+        map.setView(FLINT_MAP_CENTER, narrow ? 13 : 12, { animate: false });
       }
     }
   }, [mapReady, events, showHistoric, showEvents]);

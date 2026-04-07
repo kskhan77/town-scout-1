@@ -60,10 +60,7 @@ export function EventsMapPanel() {
           <h2 id="events-map-heading" className="text-lg font-bold text-[#002D5B]">
             Explore Flint on the map
           </h2>
-          <p className="mt-1 max-w-2xl text-sm text-neutral-600">
-            Historic landmarks and venues (like the Figma explorer). Toggle layers; add latitude/longitude when
-            creating an event to pin it here.
-          </p>
+           
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-[#334155]">

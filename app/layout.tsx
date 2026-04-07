@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/organisms/Header";
@@ -18,6 +18,30 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Town Scout",
   description: "Discovering the heart of your town, one landmark at a time.",
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/logo.svg", type: "image/svg+xml" }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Town Scout",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+/** Mobile / PWA: theme color in browser chrome & when installed as standalone. */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#002d5b" },
+    { media: "(prefers-color-scheme: dark)", color: "#002d5b" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

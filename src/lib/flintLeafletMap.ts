@@ -19,20 +19,32 @@ export const FLINT_MAP_POPUP_OPTIONS: PopupOptions = {
   autoPanPaddingBottomRight: L.point(POPUP_EDGE, POPUP_EDGE),
 };
 
-/** Shared pin style for Flint maps (events + history). */
-export function flintMapPinIcon(color: string): L.DivIcon {
+export type FlintMapPinSize = "default" | "mobile";
+
+/** Shared pin style for Flint maps (events + history). `mobile` is slightly larger for small screens. */
+export function flintMapPinIcon(color: string, size: FlintMapPinSize = "default"): L.DivIcon {
   const c = esc(color);
-  const inner = `<div style="position:relative;width:30px;height:38px;pointer-events:none;">
-    <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid ${c};filter:brightness(0.88);"></div>
-    <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:26px;height:26px;border-radius:50%;background:linear-gradient(165deg,#ffffff 0%,${c} 58%);border:3px solid #fff;box-shadow:0 3px 14px rgba(0,45,91,0.3),0 0 0 1px rgba(0,0,0,0.05);"></div>
+  const s = size === "mobile" ? 1.22 : 1;
+  const w = Math.round(30 * s);
+  const h = Math.round(38 * s);
+  const circle = Math.round(26 * s);
+  const border = Math.max(2, Math.round(3 * s));
+  const triW = Math.round(8 * s);
+  const triH = Math.round(11 * s);
+  const bottom = Math.max(1, Math.round(2 * s));
+  const inner = `<div style="position:relative;width:${w}px;height:${h}px;pointer-events:none;">
+    <div style="position:absolute;bottom:${bottom}px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:${triW}px solid transparent;border-right:${triW}px solid transparent;border-top:${triH}px solid ${c};filter:brightness(0.88);"></div>
+    <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:${circle}px;height:${circle}px;border-radius:50%;background:linear-gradient(165deg,#ffffff 0%,${c} 58%);border:${border}px solid #fff;box-shadow:0 3px 14px rgba(0,45,91,0.3),0 0 0 1px rgba(0,0,0,0.05);"></div>
   </div>`;
+  const ax = Math.round(w / 2);
+  const ay = Math.round(h - 2 * s);
   return L.divIcon({
     className: "townscout-map-pin",
     html: inner,
-    iconSize: [30, 38],
-    iconAnchor: [15, 36],
-    popupAnchor: [0, -34],
-    tooltipAnchor: [0, -28],
+    iconSize: [w, h],
+    iconAnchor: [ax, ay],
+    popupAnchor: [0, Math.round(-34 * s)],
+    tooltipAnchor: [0, Math.round(-28 * s)],
   });
 }
 

@@ -98,15 +98,19 @@ body {
   border-radius: 14px !important;
   background: transparent !important;
   box-shadow: none !important;
-  max-width: min(240px, calc(100vw - 24px)) !important;
+  /* Grow with short labels; cap width so long titles wrap instead of spilling. */
+  width: max-content !important;
+  max-width: min(440px, calc(100vw - 24px)) !important;
   box-sizing: border-box;
+  white-space: normal !important;
 }
 
 .ts-map-tooltip-shell .leaflet-tooltip-content {
   margin: 0 !important;
-  max-width: min(240px, calc(100vw - 24px)) !important;
+  width: max-content !important;
+  max-width: min(440px, calc(100vw - 24px)) !important;
   box-sizing: border-box !important;
-  overflow: hidden;
+  white-space: normal !important;
 }
 
 .ts-map-popup-shell .leaflet-popup-content-wrapper {
@@ -134,6 +138,7 @@ body {
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 10px 36px -14px rgba(0, 45, 91, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  width: fit-content;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
@@ -168,7 +173,7 @@ body {
 }
 
 .ts-map-tip__meta {
-  flex: 1 1 0;
+  flex: 0 1 auto;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -193,10 +198,13 @@ body {
 }
 
 .ts-map-tip__title {
+  min-width: 0;
+  max-width: 100%;
   font-size: 13px;
   font-weight: 700;
   line-height: 1.25;
   color: #002d5b;
+  white-space: normal;
   overflow-wrap: break-word;
   word-break: break-word;
 }
@@ -249,6 +257,10 @@ body {
   font-weight: 800;
   line-height: 1.25;
   color: #002d5b;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .ts-map-pop__meta {
