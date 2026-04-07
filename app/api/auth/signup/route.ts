@@ -4,11 +4,38 @@ import { prisma } from "@/lib/prisma";
 import { isFlintServiceZip, normalizeZip } from "@/lib/flint-zips";
 import { getPasswordChecks, passwordMeetsPolicy } from "@/lib/signup-password";
 
+/** Prisma + bcrypt need the Node runtime (not Edge). */
+export const runtime = "nodejs";
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function prismaErrorMessage(e: unknown): string | null {
+  if (typeof e !== "object" || e === null || !("code" in e)) return null;
+  const code = (e as { code?: string }).code;
+  switch (code) {
+    case "P1001":
+    case "P1000":
+    case "P1017":
+      return "The app cannot reach the database. Ensure PostgreSQL is running and DATABASE_URL in .env.local is correct.";
+    case "P2002":
+      return "An account with this email already exists.";
+    case "P2021":
+      return "Database tables are missing. Run: npx prisma db push (or migrate) against your DATABASE_URL.";
+    case "P2022":
+      return "The database schema is out of date. Run: npx prisma db push (or migrate) so the users table matches the Prisma schema.";
+    default:
+      return null;
+  }
+}
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    }
     const email = typeof body.email === "string" ? body.email.toLowerCase().trim() : "";
     const confirmEmail =
       typeof body.confirmEmail === "string" ? body.confirmEmail.toLowerCase().trim() : "";
@@ -75,6 +102,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (e) {
     console.error("signup", e);
+    const prismaMsg = prismaErrorMessage(e);
+    if (prismaMsg) {
+      const status =
+        typeof e === "object" &&
+        e !== null &&
+        "code" in e &&
+        (e as { code: string }).code === "P2002"
+          ? 409
+          : 503;
+      return NextResponse.json({ error: prismaMsg }, { status });
+    }
     return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
   }
 }
