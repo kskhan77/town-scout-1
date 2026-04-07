@@ -7,6 +7,9 @@ import { signIn } from "next-auth/react";
 import { useMemo, useState } from "react";
 import { AuthFormShell } from "@/components/auth/AuthFormShell";
 import {
+  authSlideInputClass,
+  authSlideLabelClass,
+  authSlidePrimaryCtaClass,
   signupInputClass,
   signupLabelClass,
 } from "@/components/auth/authFigmaTokens";
@@ -33,7 +36,16 @@ function CheckRow({ ok, label }: { ok: boolean; label: string }) {
   );
 }
 
-export function SignupForm() {
+type SignupFormProps = {
+  shellRoot?: "main" | "div";
+  embeddedInSlideCard?: boolean;
+};
+
+export function SignupForm({ shellRoot = "main", embeddedInSlideCard = false }: SignupFormProps) {
+  const inSlide = embeddedInSlideCard;
+  const inputC = inSlide ? authSlideInputClass : signupInputClass;
+  const labelC = inSlide ? authSlideLabelClass : signupLabelClass;
+
   const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -120,36 +132,47 @@ export function SignupForm() {
 
   return (
     <AuthFormShell
+      rootElement={shellRoot}
+      variant={shellRoot === "div" ? "slider" : "standalone"}
+      embeddedSlide={embeddedInSlideCard}
       layoutVariant="signup"
       title="Create your account"
-      subtitle="Join the community and explore Flint, MI."
+      subtitle={
+        inSlide ? (
+          <span className="font-normal">Join the community and explore Flint, MI.</span>
+        ) : (
+          "Join the community and explore Flint, MI."
+        )
+      }
       footer={
         <>
           Already have an account?{" "}
-          <Link href="/login" className="font-bold text-[#e63746] hover:underline">
+          <Link href="/login" className="font-bold text-[#002d5b] hover:text-cyan-600 hover:underline">
             Sign in
           </Link>
         </>
       }
       leading={
-        <div className="relative hidden w-full max-w-[382px] lg:block">
-          <div
-            className="relative w-full overflow-hidden rounded-[27px] border border-black/25 bg-white shadow-[9px_11px_17.6px_2px_rgba(0,0,0,0.25)]"
-            style={{ aspectRatio: "382 / 354" }}
-          >
-            <Image
-              src="/images/signup-hero.png"
-              alt="Michigan map highlighting Flint — Town Scout"
-              fill
-              className="object-cover object-center"
-              sizes="(min-width: 1024px) 382px, 100vw"
-              priority
-            />
+        embeddedInSlideCard ? undefined : (
+          <div className="relative hidden w-full max-w-[382px] lg:block">
+            <div
+              className="relative w-full overflow-hidden rounded-[27px] border border-black/25 bg-white shadow-[9px_11px_17.6px_2px_rgba(0,0,0,0.25)]"
+              style={{ aspectRatio: "382 / 354" }}
+            >
+              <Image
+                src="/images/signup-hero.png"
+                alt="Michigan map highlighting Flint — Town Scout"
+                fill
+                className="object-cover object-center"
+                sizes="(min-width: 1024px) 382px, 100vw"
+                priority
+              />
+            </div>
           </div>
-        </div>
+        )
       }
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className={`flex flex-col ${inSlide ? "gap-3.5" : "gap-5"}`}>
         {error ? (
           <p
             className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
@@ -161,7 +184,7 @@ export function SignupForm() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="signup-first" className={signupLabelClass}>
+            <label htmlFor="signup-first" className={labelC}>
               First Name
             </label>
             <input
@@ -170,13 +193,13 @@ export function SignupForm() {
               type="text"
               autoComplete="given-name"
               placeholder="John"
-              className={signupInputClass}
+              className={inputC}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
           <div>
-            <label htmlFor="signup-last" className={signupLabelClass}>
+            <label htmlFor="signup-last" className={labelC}>
               Last Name
             </label>
             <input
@@ -185,7 +208,7 @@ export function SignupForm() {
               type="text"
               autoComplete="family-name"
               placeholder="Doe"
-              className={signupInputClass}
+              className={inputC}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
@@ -193,7 +216,7 @@ export function SignupForm() {
         </div>
 
         <div>
-          <label htmlFor="signup-email" className={signupLabelClass}>
+          <label htmlFor="signup-email" className={labelC}>
             Email Address
           </label>
           <input
@@ -203,13 +226,13 @@ export function SignupForm() {
             autoComplete="email"
             required
             placeholder="your@email.com"
-            className={signupInputClass}
+            className={inputC}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
-          <label htmlFor="signup-email-confirm" className={signupLabelClass}>
+          <label htmlFor="signup-email-confirm" className={labelC}>
             Confirm Email Address
           </label>
           <input
@@ -219,14 +242,14 @@ export function SignupForm() {
             autoComplete="email"
             required
             placeholder="Re-enter your email"
-            className={signupInputClass}
+            className={inputC}
             value={confirmEmail}
             onChange={(e) => setConfirmEmail(e.target.value)}
           />
         </div>
 
         <div>
-          <label htmlFor="signup-password" className={`${signupLabelClass} mb-2`}>
+          <label htmlFor="signup-password" className={inSlide ? labelC : `${signupLabelClass} mb-2`}>
             Password
           </label>
           <input
@@ -235,7 +258,7 @@ export function SignupForm() {
             type="password"
             autoComplete="new-password"
             required
-            className={signupInputClass}
+            className={inputC}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -274,7 +297,7 @@ export function SignupForm() {
         </div>
 
         <div>
-          <label htmlFor="signup-password-confirm" className={signupLabelClass}>
+          <label htmlFor="signup-password-confirm" className={labelC}>
             Confirm Password
           </label>
           <input
@@ -284,14 +307,20 @@ export function SignupForm() {
             autoComplete="new-password"
             required
             placeholder="••••••••"
-            className={signupInputClass}
+            className={inputC}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
 
-        <div className="rounded-lg border border-[rgba(230,55,70,0.1)] bg-[rgba(0,204,244,0.2)] p-[17px]">
-          <label htmlFor="signup-zip" className={signupLabelClass}>
+        <div
+          className={
+            inSlide
+              ? "rounded-xl border border-cyan-200/60 bg-cyan-50/40 p-3"
+              : "rounded-lg border border-[rgba(230,55,70,0.1)] bg-[rgba(0,204,244,0.2)] p-[17px]"
+          }
+        >
+          <label htmlFor="signup-zip" className={labelC}>
             Location (Zip Code)
           </label>
           <input
@@ -303,13 +332,13 @@ export function SignupForm() {
             required
             maxLength={10}
             placeholder="48501"
-            className={`${signupInputClass} bg-white`}
+            className={inSlide ? inputC : `${signupInputClass} bg-white`}
             value={zipCode}
             onChange={(e) => setZipCode(e.target.value)}
             aria-invalid={zipOk === false}
             aria-describedby="signup-zip-hint"
           />
-          <p id="signup-zip-hint" className="mt-2 text-xs font-medium text-[#e63746]">
+          <p id="signup-zip-hint" className="mt-2 text-xs font-medium text-[#002d5b]">
             Currently serving Flint, MI zip codes
           </p>
           {zipOk === false ? (
@@ -320,7 +349,11 @@ export function SignupForm() {
         <button
           type="submit"
           disabled={loading}
-          className="flex h-[46px] w-full items-center justify-center rounded-lg bg-[#00ccf4] text-sm font-bold text-white transition hover:bg-[#00b8e6] disabled:opacity-60"
+          className={
+            inSlide
+              ? authSlidePrimaryCtaClass
+              : "flex h-[46px] w-full items-center justify-center rounded-lg bg-[#00ccf4] text-sm font-bold text-white transition hover:bg-[#00b8e6] disabled:opacity-60"
+          }
         >
           {loading ? "Creating account…" : "Create Account"}
         </button>
