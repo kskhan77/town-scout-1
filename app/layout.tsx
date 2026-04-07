@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/organisms/Header";
 import { Footer } from "@/components/organisms/Footer";
+import { LocalPulseWidget } from "@/components/organisms/LocalPulseWidget";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 
 const geistSans = Geist({
@@ -58,6 +59,7 @@ export default function RootLayout({
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />
+          <LocalPulseWidget />
         </SessionProvider>
       </body>
     </html>
