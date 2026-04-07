@@ -13,7 +13,13 @@ export interface HistorySliderSlide {
   caption?: string;
   /** Short encyclopedia-style blurb (shown in lightbox or tooltips later) */
   wikiSummary?: string;
+  /** Approximate map pin in Flint / Genesee County for `/history` explorer */
+  mapLat: number;
+  mapLng: number;
 }
+
+/** Warm accent for history-archive pins (matches landmark “history” styling). */
+export const FLINT_HISTORY_MAP_ACCENT = "#b45309";
 
 /**
  * Every image in `public/historic`. Order: Flint overview → strike era → archives → misc.
@@ -26,6 +32,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "History of Flint",
     wikiSummary:
       "Flint’s story spans Indigenous Anishinaabe homelands, lumber and carriage-making, and its role as a center of General Motors manufacturing and 20th-century labor history.",
+    mapLat: 43.01235,
+    mapLng: -83.68385,
   },
   {
     src: "/historic/history_coverart_022019.jpg",
@@ -33,6 +41,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Flint history feature art",
     wikiSummary:
       "Editorial or program artwork used to highlight Flint’s past—often tied to museum, media, or community history projects.",
+    mapLat: 43.0118,
+    mapLng: -83.6882,
   },
   {
     src: "/historic/History_coverart_032019.jpg",
@@ -40,6 +50,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Flint history feature art",
     wikiSummary:
       "Promotional or publication imagery celebrating local heritage and civic memory in Genesee County.",
+    mapLat: 43.0132,
+    mapLng: -83.6865,
   },
   {
     src: "/historic/flint-sit-down-strike-gettyimages-97322226.avif",
@@ -47,6 +59,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Sit-down strike era",
     wikiSummary:
       "The 1936–37 Flint sit-down strike at General Motors Fisher Body plants helped establish the UAW and reshaped American industrial relations.",
+    mapLat: 43.0185,
+    mapLng: -83.6878,
   },
   {
     src: "/historic/fisher-plant-strikers-inside.jpg",
@@ -54,6 +68,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Fisher Body plant",
     wikiSummary:
       "Strikers occupied Fisher Body Plant No. 3 in Flint, maintaining round-the-clock control of the factory until GM recognized the union.",
+    mapLat: 43.019,
+    mapLng: -83.6882,
   },
   {
     src: "/historic/strike-meal-cafeteria.jpg",
@@ -61,6 +77,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Strike kitchen",
     wikiSummary:
       "Communal meals sustained sit-down strikers for weeks; kitchens and discipline inside the plant were part of the occupation strategy.",
+    mapLat: 43.0182,
+    mapLng: -83.6869,
   },
   {
     src: "/historic/national-guard-flint-1937.jpg",
@@ -68,6 +86,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "National Guard, 1937",
     wikiSummary:
       "State forces were deployed during the strike; confrontations—including the “Battle of the Running Bulls”—drew national attention to Flint.",
+    mapLat: 43.0175,
+    mapLng: -83.6895,
   },
   {
     src: "/historic/women-of-flint-painting.jpg",
@@ -75,6 +95,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Women of Flint",
     wikiSummary:
       "Joseph Vavak’s 1937 painting Women of Flint (Smithsonian American Art Museum) depicts women’s roles in community and industrial life during the Depression era.",
+    mapLat: 43.014,
+    mapLng: -83.69,
   },
   {
     src: "/historic/065_orig.jpg",
@@ -82,6 +104,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Archive photograph",
     wikiSummary:
       "Primary-source photograph from a local or institutional collection documenting people, streets, or events in Genesee County.",
+    mapLat: 43.011,
+    mapLng: -83.685,
   },
   {
     src: "/historic/JI01a002.jpg",
@@ -89,6 +113,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Archive: JI01a002",
     wikiSummary:
       "Catalogued historical image—often from a library, museum, or university manuscript collection covering Flint and surrounding communities.",
+    mapLat: 43.0105,
+    mapLng: -83.689,
   },
   {
     src: "/historic/JI01a003.jpg",
@@ -96,6 +122,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Archive: JI01a003",
     wikiSummary:
       "Catalogued historical image from regional archives, useful for streetscape, portrait, or event research.",
+    mapLat: 43.0138,
+    mapLng: -83.684,
   },
   {
     src: "/historic/JI01h007.jpg",
@@ -103,6 +131,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Archive: JI01h007",
     wikiSummary:
       "Historical photograph preserved for public history and education about Flint and Genesee County.",
+    mapLat: 43.0145,
+    mapLng: -83.6855,
   },
   {
     src: "/historic/JI01h009.jpg",
@@ -110,6 +140,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Archive: JI01h009",
     wikiSummary:
       "Regional archive image supporting exhibits, walking tours, and digital history projects.",
+    mapLat: 43.0128,
+    mapLng: -83.691,
   },
   {
     src: "/historic/JI01h020.jpg",
@@ -117,6 +149,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Archive: JI01h020",
     wikiSummary:
       "Preserved visual record of buildings, transportation, or daily life in the Flint area.",
+    mapLat: 43.0098,
+    mapLng: -83.687,
   },
   {
     src: "/historic/t20e3-107w-1.jpg",
@@ -124,6 +158,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Archive photograph",
     wikiSummary:
       "Archival image from a numbered collection; consult your institution’s finding aid for exact date and subject.",
+    mapLat: 43.0162,
+    mapLng: -83.6888,
   },
   {
     src: "/historic/temperance-f4-second-series.png",
@@ -131,6 +167,8 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
     caption: "Temperance era graphic",
     wikiSummary:
       "Flint and Michigan were active in the temperance and reform movements of the 19th and early 20th centuries; such images reflect that civic discourse.",
+    mapLat: 43.0135,
+    mapLng: -83.6905,
   },
 ];
 

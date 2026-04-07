@@ -71,25 +71,25 @@ export function HistoryImageSlider({
         </div>
       </div>
 
-      {/* Thumbnails: wrap — no overflow scroll */}
-      <div className="mt-8">
-        <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-neutral-500 md:text-left">
+      {/* Thumbnails: even grid so rows look intentional (not one long row + orphan wrap) */}
+      <div className="mt-8 pb-1">
+        <p className="mb-4 text-center text-xs font-semibold uppercase tracking-wider text-neutral-500 md:text-left">
           Select a photo
         </p>
-        <ul className="flex flex-wrap justify-center gap-2.5 md:justify-start md:gap-3">
+        <ul className="mx-auto grid max-w-5xl grid-cols-4 justify-items-center gap-3 sm:gap-3.5 md:grid-cols-8 md:gap-4">
           {slides.map((slide, i) => {
             const isActive = i === index;
             return (
-              <li key={slide.src}>
+              <li key={slide.src} className="flex w-full justify-center">
                 <button
                   type="button"
                   onClick={() => onIndexChange(i)}
                   aria-label={`Photo ${i + 1} of ${count}: ${slide.alt}`}
                   aria-current={isActive ? "true" : undefined}
-                  className={`relative size-[3.25rem] overflow-hidden rounded-xl border-2 shadow-md transition-all duration-300 ease-out sm:size-14 md:size-16 ${
+                  className={`relative size-12 shrink-0 overflow-hidden rounded-xl border-2 shadow-md transition-all duration-300 ease-out sm:size-14 md:size-[3.75rem] ${
                     isActive
                       ? "z-10 scale-110 border-cyan-400 ring-2 ring-cyan-400/40 ring-offset-2 ring-offset-white"
-                      : "border-white opacity-30 hover:scale-105 hover:opacity-100"
+                      : "border-neutral-200/90 bg-neutral-100 opacity-80 hover:scale-105 hover:border-cyan-200 hover:opacity-100"
                   } `}
                 >
                   <Image

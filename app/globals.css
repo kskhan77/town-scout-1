@@ -68,6 +68,28 @@ body {
   z-index: 0;
 }
 
+/*
+ * Rounded map shell without overflow:hidden — hidden overflow clips popups/tooltips
+ * above the map. Popups may extend slightly outside the frame; pane z-index keeps them clickable.
+ */
+.townscout-leaflet-frame {
+  position: relative;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.townscout-leaflet-frame .leaflet-container {
+  border-radius: 1rem;
+}
+
+.townscout-leaflet-frame .leaflet-popup-pane {
+  z-index: 700;
+}
+
+.townscout-leaflet-frame .leaflet-tooltip-pane {
+  z-index: 650;
+}
+
 /* Town Scout — map hover tooltips & click popups (Leaflet HTML) */
 .ts-map-tooltip-shell.leaflet-tooltip {
   margin-top: -10px !important;
@@ -76,11 +98,15 @@ body {
   border-radius: 14px !important;
   background: transparent !important;
   box-shadow: none !important;
-  max-width: min(240px, calc(100vw - 24px));
+  max-width: min(240px, calc(100vw - 24px)) !important;
+  box-sizing: border-box;
 }
 
 .ts-map-tooltip-shell .leaflet-tooltip-content {
   margin: 0 !important;
+  max-width: min(240px, calc(100vw - 24px)) !important;
+  box-sizing: border-box !important;
+  overflow: hidden;
 }
 
 .ts-map-popup-shell .leaflet-popup-content-wrapper {
@@ -108,6 +134,9 @@ body {
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 10px 36px -14px rgba(0, 45, 91, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .ts-map-tip__media {
@@ -139,6 +168,7 @@ body {
 }
 
 .ts-map-tip__meta {
+  flex: 1 1 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -149,6 +179,7 @@ body {
 .ts-map-tip__badge {
   display: inline-block;
   align-self: flex-start;
+  max-width: 100%;
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 10px;
@@ -157,6 +188,8 @@ body {
   text-transform: uppercase;
   color: var(--accent, #002d5b);
   background: color-mix(in srgb, var(--accent, #002d5b) 14%, white);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .ts-map-tip__title {
@@ -164,12 +197,16 @@ body {
   font-weight: 700;
   line-height: 1.25;
   color: #002d5b;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .ts-map-tip__sub {
   font-size: 11px;
   color: #64748b;
   line-height: 1.3;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .ts-map-pop__hero {

@@ -65,10 +65,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.email = user.email ?? undefined;
+        token.name = user.name ?? undefined;
+      }
+      if (trigger === "update" && session?.user) {
+        const u = session.user;
+        if (u.name !== undefined && u.name !== null) {
+          token.name = typeof u.name === "string" ? u.name : token.name;
+        }
+        if (u.email !== undefined && u.email !== null) {
+          token.email = typeof u.email === "string" ? u.email : token.email;
+        }
       }
       return token;
     },
@@ -76,6 +87,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.id = (token.id as string) ?? "";
         session.user.role = (token.role as "user" | "admin") ?? "user";
+        if (typeof token.name === "string") {
+          session.user.name = token.name;
+        }
+        if (typeof token.email === "string") {
+          session.user.email = token.email;
+        }
       }
       return session;
     },

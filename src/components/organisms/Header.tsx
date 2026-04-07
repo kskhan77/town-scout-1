@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { Button } from "@/components/atoms/Button";
+import { useSession } from "next-auth/react";
 import { NavLink } from "@/components/atoms/NavLink";
+import { HeaderProfileMenu } from "@/components/molecules/HeaderProfileMenu";
 import { PAGE_SHELL } from "@/lib/pageLayout";
 
 const linkPrimary =
@@ -33,32 +33,14 @@ export const Header = () => {
           ) : null}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {status === "loading" ? (
-            <span className="h-9 w-20 animate-pulse rounded-full bg-gray-100" aria-hidden />
+            <span
+              className="flex h-10 w-36 animate-pulse items-center gap-2 rounded-full bg-neutral-100"
+              aria-hidden
+            />
           ) : session?.user ? (
-            <div className="flex items-center gap-2 sm:gap-3">
-              <span className="hidden max-w-[140px] truncate text-sm font-medium text-gray-600 sm:inline">
-                {session.user.name || session.user.email}
-              </span>
-              {session.user.role === "admin" ? (
-                <span className="rounded-full bg-[#002D5B] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
-                  Admin
-                </span>
-              ) : null}
-              <div
-                className="size-9 shrink-0 rounded-full border-2 border-white bg-[#00D1FF] shadow-sm"
-                aria-hidden
-              />
-              <Button
-                variant="outline"
-                type="button"
-                className="text-xs"
-                onClick={() => signOut({ callbackUrl: "/" })}
-              >
-                Logout
-              </Button>
-            </div>
+            <HeaderProfileMenu user={session.user} />
           ) : (
             <>
               <Link href="/login" className={linkOutline}>
