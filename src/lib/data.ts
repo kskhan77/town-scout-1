@@ -1,9 +1,14 @@
 // src/lib/data.ts
 
 export interface Landmark {
+  id?: string;
   title: string;
   image: string;
+  images?: string[];
   tags: string[];
+  latitude?: number;
+  longitude?: number;
+  description?: string;
 }
 
 /** Local archive under /public/historic — all images in that folder */
@@ -137,19 +142,83 @@ export const flintHistorySliderSlides: HistorySliderSlide[] = [
 /** Historic Landmarks — matches Figma card copy */
 export const historicLandmarksOfFlint: Landmark[] = [
   {
+    id: "flint-cultural-center",
     title: "Flint Cultural Center",
     image: "/whiting.svg",
     tags: ["Local Artists", "Live Music", "Food Trucks"],
+    latitude: 43.0195,
+    longitude: -83.6783,
+    description:
+      "A nationally recognized arts and cultural campus spanning 55 acres at 1221 E Kearsley St. Home to the Flint Institute of Arts, Flint Institute of Music, Sloan Museum, and the Whiting Auditorium — one of Michigan's premier performing arts venues.",
   },
   {
+    id: "crossroads-village",
     title: "Crossroads Village",
     image: "/framerMarket.svg",
     tags: ["Fresh Produce", "Local Vendors", "Saturday 9AM - 2PM"],
+    latitude: 43.0931,
+    longitude: -83.6506,
+    description:
+      "A living history village set in the 1860s–1900s era, featuring over 30 restored historic buildings, a paddle-wheel riverboat, and a Venetian Carousel on the shores of Mott Lake. A beloved Genesee County destination for families and history enthusiasts.",
   },
   {
+    id: "capitol-theatre",
     title: "Capitol Theatre",
     image: "/capital.svg",
     tags: ["Family Night", "Blankets & Chairs", "Fridays at Sunset"],
+    latitude: 43.0153,
+    longitude: -83.6889,
+    description:
+      "A breathtaking 1928 movie palace at 140 E 2nd St in downtown Flint. After a landmark $37 million restoration, it reopened as a premier live entertainment venue hosting concerts, comedy, classic films, and community events. Managed by the Flint Institute of Music.",
+  },
+  {
+    id: "chevy-in-the-hole",
+    title: "Chevy in the Hole",
+    image: "/historic/ChevyInTheHole.jpg",
+    images: ["/historic/ChevyInTheHole.jpg", "/historic/Flint_Sit-Down_Strike_National_Guard.jpg"],
+    tags: ["Industrial History", "Flint River", "Chevy Commons"],
+    latitude: 43.0086,
+    longitude: -83.7099,
+    description:
+      "Once the beating industrial heart of Flint, \"Chevy in the Hole\" was the original Chevrolet manufacturing complex straddling the Flint River. At its peak it employed tens of thousands of workers. Today it has been reborn as Chevy Commons — a restored green space with meadows, wetlands, and event grounds along the river.",
+  },
+  {
+    id: "buick-city",
+    title: "Buick City",
+    image: "/historic/buickcity.avif",
+    images: ["/historic/buickcity.avif", "/historic/Buick_motor_works_flint_1907.jpg"],
+    tags: ["Automotive Heritage", "GM History", "Industrial Site"],
+    latitude: 43.0421,
+    longitude: -83.6842,
+    description:
+      "The sprawling 412-acre Buick City complex on E Leith St was the world's most vertically integrated automobile plant, operating from 1904 to 1999. At its height it produced 900 Buicks per day and employed over 28,000 workers. The site's closure marked the end of an era in American manufacturing and in Flint's history.",
+  },
+  {
+    id: "fisher-body-plant",
+    title: "Fisher Body Plant (Strike Site)",
+    image: "/historic/fisherbody1.avif",
+    images: [
+      "/historic/fisherbody1.avif",
+      "/historic/fisher-plant-strikers-inside.jpg",
+      "/historic/flint-sit-down-strike-gettyimages-97322226.avif",
+      "/historic/national-guard-flint-1937.jpg",
+    ],
+    tags: ["Labor History", "UAW", "1936–37 Sit-Down Strike"],
+    latitude: 43.0104,
+    longitude: -83.7102,
+    description:
+      "On December 30, 1936, autoworkers occupied General Motors' Fisher Body Plant No. 1 on S Saginaw St, launching the historic 44-day Flint Sit-Down Strike. Facing freezing temperatures and police confrontation — including the \"Battle of the Running Bulls\" — strikers held firm until GM recognized the UAW. It was a pivotal moment that reshaped American labor rights forever.",
+  },
+  {
+    id: "atwood-stadium",
+    title: "Atwood Stadium",
+    image: "/historic/Kennedy.jpg",
+    images: ["/historic/Kennedy.jpg", "/historic/Atwood.jpg"],
+    tags: ["Athletics", "JFK Rally 1960", "FDR Rally 1936"],
+    latitude: 43.0172,
+    longitude: -83.7023,
+    description:
+      "Historic 11,000-seat stadium at 701 University Ave in Flint's Carriage Town district, owned by Kettering University. A stage for Flint's greatest moments: President Franklin D. Roosevelt drew a massive crowd here in 1936, and Senator John F. Kennedy electrified 13,000 supporters at a campaign rally in September 1960 — weeks before winning the presidency.",
   },
 ];
 

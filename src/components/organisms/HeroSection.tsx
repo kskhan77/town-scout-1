@@ -1,4 +1,5 @@
 // src/components/organisms/HeroSection.tsx
+import Link from 'next/link';
 import { Button } from '../atoms/Button';
 import { PAGE_SHELL } from '@/lib/pageLayout';
 
@@ -30,9 +31,11 @@ export const HeroSection = () => {
         </p>
         
         <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-            <Button variant="primary" className="px-10 py-4 text-lg shadow-2xl">
+            <Link href="/explore">
+              <Button variant="primary" className="px-10 py-4 text-lg shadow-2xl">
                 Explore Now
-            </Button>
+              </Button>
+            </Link>
             <Button variant="outline" className="text-white border-white hover:bg-white/20 px-10 py-4 text-lg">
                 Learn More
             </Button>
