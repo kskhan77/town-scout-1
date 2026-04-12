@@ -12,7 +12,7 @@ interface AddEventFormProps {
 
 export function AddEventForm({ loading, error, onSubmit }: AddEventFormProps) {
   return (
-    <form onSubmit={onSubmit} className="mt-14 max-w-xl rounded-2xl bg-white p-8 shadow-md">
+    <form onSubmit={onSubmit} className="mt-8 max-w-xl rounded-2xl bg-white p-8 shadow-md md:mt-10">
       <h2 className="text-lg font-bold text-[#002D5B]">Add an Event</h2>
 
       {error && <p className="mt-3 text-sm text-red-500">{error}</p>}

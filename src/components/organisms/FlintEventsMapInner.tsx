@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { FLINT_MAP_CENTER, categoryPinColors, flintStaticMapPlaces } from "@/lib/flintMapPlaces";
@@ -32,6 +32,8 @@ interface FlintEventsMapInnerProps {
   events: MapEventPoint[];
   showHistoric: boolean;
   showEvents: boolean;
+  /** Optional outer height/minHeight for the map frame (e.g. taller on /events). */
+  frameStyle?: CSSProperties;
 }
 
 function collectVisibleLatLngs(
@@ -57,10 +59,16 @@ function collectVisibleLatLngs(
   return pts;
 }
 
+const DEFAULT_FRAME_STYLE: CSSProperties = {
+  height: 420,
+  minHeight: 320,
+};
+
 export default function FlintEventsMapInner({
   events,
   showHistoric,
   showEvents,
+  frameStyle,
 }: FlintEventsMapInnerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -244,11 +252,13 @@ export default function FlintEventsMapInner({
     }
   }, [mapReady, events, showHistoric, showEvents]);
 
+  const mergedFrame: CSSProperties = { ...DEFAULT_FRAME_STYLE, ...frameStyle };
+
   return (
     <div
       ref={containerRef}
       className="townscout-leaflet-frame z-0 w-full rounded-2xl border border-black/10 bg-[#e8eef2] shadow-[0_12px_40px_-20px_rgba(0,45,91,0.25)]"
-      style={{ height: 420, minHeight: 320 }}
+      style={mergedFrame}
       role="presentation"
     />
   );

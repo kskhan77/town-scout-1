@@ -100,9 +100,9 @@ export function EventsSection() {
   return (
     <>
       {events.length === 0 ? (
-        <p className="mt-10 text-neutral-500">No upcoming events. Check back soon.</p>
+        <p className="mt-6 text-neutral-500 md:mt-8">No upcoming events. Check back soon.</p>
       ) : (
-        <ul className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-6 grid grid-cols-1 gap-6 md:mt-8 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <EventCard
               key={event.id}
