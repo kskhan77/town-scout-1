@@ -23,6 +23,7 @@ const mainLinks: { href: string; label: string; hint: string }[] = [
   { href: "/", label: "Home", hint: "Landmarks & stories" },
   { href: "/events", label: "Events", hint: "Map & calendar" },
   { href: "/history", label: "History", hint: "Archives on the map" },
+  { href: "/explore", label: "Explore", hint: "Interactive landmark map" },
 ];
 
 export function MobileNavSheet({ open, onClose, session, status }: MobileNavSheetProps) {

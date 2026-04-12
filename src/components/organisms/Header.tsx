@@ -54,6 +54,7 @@ export const Header = () => {
           <NavLink href="/">Home</NavLink>
           <NavLink href="/events">Events</NavLink>
           <NavLink href="/history">History</NavLink>
+          <NavLink href="/explore">Explore</NavLink>
           {session?.user?.role === "admin" ? (
             <NavLink href="/admin">Admin</NavLink>
           ) : null}

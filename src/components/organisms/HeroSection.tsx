@@ -58,7 +58,7 @@ export const HeroSection = () => {
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
-              <Link href="/history" className={heroPrimaryCta}>
+              <Link href="/explore" className={heroPrimaryCta}>
                 Explore now
               </Link>
               <Link href="/events" className={heroSecondaryCta}>

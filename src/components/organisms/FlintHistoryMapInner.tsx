@@ -11,26 +11,53 @@ import {
   flintMapPopupHtml,
   flintMapTooltipHtml,
 } from "@/lib/flintLeafletMap";
-import { safeMapImageUrl } from "@/lib/mapPopupHtml";
+import { userLocationLeafletIcon } from "@/lib/leafletUserLocation";
+import { safeMapImageUrl, truncate } from "@/lib/mapPopupHtml";
 
 const BADGE = "Archive";
+
+export type HistoryMapUserPos = { lat: number; lng: number };
+
+function formatDistanceMeters(meters: number): string {
+  if (!Number.isFinite(meters)) return "";
+  if (meters >= 1000) return `${(meters / 1000).toFixed(1)} km`;
+  return `${Math.round(meters)} m`;
+}
+
+function distanceToSlide(user: HistoryMapUserPos, slide: HistorySliderSlide): number {
+  return L.latLng(user.lat, user.lng).distanceTo(L.latLng(slide.mapLat, slide.mapLng));
+}
+
+function tooltipSubtitle(slide: HistorySliderSlide, userPos: HistoryMapUserPos | null | undefined): string {
+  const base = "Flint historical photograph";
+  if (!userPos) return base;
+  const m = distanceToSlide(userPos, slide);
+  return `${formatDistanceMeters(m)} from you · ${truncate(slide.caption ?? slide.alt, 36)}`;
+}
 
 interface FlintHistoryMapInnerProps {
   slides: HistorySliderSlide[];
   selectedSlideIndex: number;
   onMarkerSelect: (index: number) => void;
+  /** When set, shows “you are here” and live distances in tooltips (same idea as Explore). */
+  userPos?: HistoryMapUserPos | null;
 }
 
 export default function FlintHistoryMapInner({
   slides,
   selectedSlideIndex,
   onMarkerSelect,
+  userPos = null,
 }: FlintHistoryMapInnerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const layerRef = useRef<L.LayerGroup | null>(null);
+  const markersLayerRef = useRef<L.LayerGroup | null>(null);
+  const userLayerRef = useRef<L.LayerGroup | null>(null);
   const markersRef = useRef<(L.Marker | null)[]>([]);
   const skipInitialFlyRef = useRef(true);
+  /** One-time fit around the user + nearby archive pins after first location fix. */
+  const userLocationFramedRef = useRef(false);
+  const userMarkerRef = useRef<L.Marker | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const accent = FLINT_HISTORY_MAP_ACCENT;
 
@@ -45,13 +72,14 @@ export default function FlintHistoryMapInner({
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
 
-    const group = L.layerGroup().addTo(map);
+    const markersGroup = L.layerGroup().addTo(map);
+    const userGroup = L.layerGroup().addTo(map);
     mapRef.current = map;
-    layerRef.current = group;
+    markersLayerRef.current = markersGroup;
+    userLayerRef.current = userGroup;
 
     const fixSize = () => map.invalidateSize({ animate: false });
     map.whenReady(() => {
@@ -75,14 +103,16 @@ export default function FlintHistoryMapInner({
       setMapReady(false);
       map.remove();
       mapRef.current = null;
-      layerRef.current = null;
+      markersLayerRef.current = null;
+      userLayerRef.current = null;
       markersRef.current = [];
+      userMarkerRef.current = null;
     };
   }, []);
 
   useEffect(() => {
     if (!mapReady) return;
-    const group = layerRef.current;
+    const group = markersLayerRef.current;
     if (!group) return;
 
     group.clearLayers();
@@ -99,7 +129,7 @@ export default function FlintHistoryMapInner({
         flintMapTooltipHtml({
           badge: BADGE,
           title,
-          subtitle: "Flint historical photograph",
+          subtitle: tooltipSubtitle(slide, null),
           imageUrl: img,
           accent,
         }),
@@ -134,6 +164,84 @@ export default function FlintHistoryMapInner({
   }, [mapReady, slides, onMarkerSelect, accent]);
 
   useEffect(() => {
+    if (!mapReady) return;
+    const userGroup = userLayerRef.current;
+    if (!userGroup) return;
+
+    if (!userPos) {
+      if (userMarkerRef.current) {
+        userGroup.removeLayer(userMarkerRef.current);
+        userMarkerRef.current = null;
+      }
+    } else if (!userMarkerRef.current) {
+      const m = L.marker([userPos.lat, userPos.lng], {
+        icon: userLocationLeafletIcon("history"),
+        zIndexOffset: 2500,
+      });
+      m.bindPopup("You are here");
+      m.addTo(userGroup);
+      userMarkerRef.current = m;
+    } else {
+      userMarkerRef.current.setLatLng([userPos.lat, userPos.lng]);
+    }
+
+    slides.forEach((slide, i) => {
+      const marker = markersRef.current[i];
+      if (!marker) return;
+      const title = slide.caption ?? slide.alt;
+      const img = safeMapImageUrl(slide.src);
+      const tip = marker.getTooltip();
+      if (tip) {
+        tip.setContent(
+          flintMapTooltipHtml({
+            badge: BADGE,
+            title,
+            subtitle: tooltipSubtitle(slide, userPos ?? null),
+            imageUrl: img,
+            accent,
+          }),
+        );
+      }
+    });
+  }, [userPos, mapReady, slides, accent]);
+
+  useEffect(() => {
+    if (!mapReady || !mapRef.current) return;
+    if (!userPos) {
+      userLocationFramedRef.current = false;
+      return;
+    }
+    if (userLocationFramedRef.current) return;
+    userLocationFramedRef.current = true;
+
+    const map = mapRef.current;
+    const narrow = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+    const u = L.latLng(userPos.lat, userPos.lng);
+    const ranked = slides
+      .map((slide) => ({
+        slide,
+        d: u.distanceTo(L.latLng(slide.mapLat, slide.mapLng)),
+      }))
+      .sort((a, b) => a.d - b.d);
+
+    const WITHIN_M = 4500;
+    const nearby = ranked.filter((r) => r.d <= WITHIN_M);
+    const pts: L.LatLng[] = [u];
+    if (nearby.length > 0) {
+      nearby.forEach((r) => pts.push(L.latLng(r.slide.mapLat, r.slide.mapLng)));
+    } else {
+      ranked.slice(0, 6).forEach((r) => pts.push(L.latLng(r.slide.mapLat, r.slide.mapLng)));
+    }
+
+    map.fitBounds(L.latLngBounds(pts), {
+      padding: narrow ? [40, 40] : [64, 64],
+      maxZoom: 15,
+      animate: true,
+    });
+    window.setTimeout(() => map.invalidateSize({ animate: false }), 100);
+  }, [mapReady, userPos, slides]);
+
+  useEffect(() => {
     if (!mapReady || !mapRef.current) return;
     const slide = slides[selectedSlideIndex];
     if (!slide) return;
@@ -153,8 +261,7 @@ export default function FlintHistoryMapInner({
   return (
     <div
       ref={containerRef}
-      className="townscout-leaflet-frame z-0 w-full rounded-2xl border border-amber-900/15 bg-[#f4efe8] shadow-[0_12px_40px_-20px_rgba(120,53,15,0.22)]"
-      style={{ height: 460, minHeight: 320 }}
+      className="townscout-leaflet-frame z-0 h-full min-h-0 w-full rounded-none border-0 bg-[#f4efe8] shadow-none"
       role="presentation"
     />
   );

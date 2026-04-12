@@ -299,3 +299,103 @@ body {
 .ts-map-pop__link:hover {
   color: #0e7490;
 }
+
+/* —— Animated “my location” marker (Explore + History maps) —— */
+.ts-user-loc-root {
+  background: transparent !important;
+  border: none !important;
+}
+
+.ts-user-loc {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.ts-user-loc--explore {
+  --ts-loc-ring: rgba(0, 209, 255, 0.55);
+  --ts-loc-ring-soft: rgba(0, 209, 255, 0.2);
+  --ts-loc-core: #00d1ff;
+  --ts-loc-core-edge: #00b8e6;
+}
+
+.ts-user-loc--history {
+  --ts-loc-ring: rgba(245, 158, 11, 0.6);
+  --ts-loc-ring-soft: rgba(180, 83, 9, 0.22);
+  --ts-loc-core: #f59e0b;
+  --ts-loc-core-edge: #b45309;
+}
+
+.ts-user-loc__dot {
+  position: relative;
+  z-index: 2;
+  width: 15px;
+  height: 15px;
+  border-radius: 9999px;
+  background: linear-gradient(165deg, #ffffff 0%, var(--ts-loc-core) 55%);
+  border: 3px solid #fff;
+  box-shadow:
+    0 0 0 1px rgba(0, 45, 91, 0.12),
+    0 4px 14px rgba(0, 45, 91, 0.28);
+}
+
+.ts-user-loc__ring {
+  position: absolute;
+  z-index: 1;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--ts-loc-ring);
+  background: radial-gradient(circle, var(--ts-loc-ring-soft) 0%, transparent 70%);
+  opacity: 0.95;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes ts-user-loc-pulse {
+    0% {
+      transform: scale(0.45);
+      opacity: 0.95;
+    }
+    55% {
+      opacity: 0.35;
+    }
+    100% {
+      transform: scale(1.35);
+      opacity: 0;
+    }
+  }
+
+  @keyframes ts-user-loc-pop-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .ts-user-loc__ring {
+    animation: ts-user-loc-pulse 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  .ts-user-loc__dot {
+    animation: ts-user-loc-pop-in 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts-user-loc__ring {
+    opacity: 0.45;
+    transform: scale(1.05);
+  }
+}
