@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import L from "leaflet";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DiscoverHistorySection } from "@/components/organisms/DiscoverHistorySection";
 import { flintHistorySliderSlides, type HistorySliderSlide } from "@/lib/data";
@@ -24,8 +23,17 @@ function formatDistanceMeters(meters: number): string {
   return `${Math.round(meters)} m`;
 }
 
+/** Great-circle distance in meters (matches Leaflet’s LatLng#distanceTo closely; no Leaflet import so SSR/build is safe). */
 function distanceToSlide(user: UserPos, slide: HistorySliderSlide): number {
-  return L.latLng(user.lat, user.lng).distanceTo(L.latLng(slide.mapLat, slide.mapLng));
+  const R = 6371000;
+  const φ1 = (user.lat * Math.PI) / 180;
+  const φ2 = (slide.mapLat * Math.PI) / 180;
+  const Δφ = ((slide.mapLat - user.lat) * Math.PI) / 180;
+  const Δλ = ((slide.mapLng - user.lng) * Math.PI) / 180;
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 type NearbyRow = { slide: HistorySliderSlide; index: number; distanceM: number | null };
