@@ -247,17 +247,17 @@ export const historicLandmarksOfFlint: Landmark[] = [
     description:
       "On December 30, 1936, autoworkers occupied General Motors' Fisher Body Plant No. 1 on S Saginaw St, launching the historic 44-day Flint Sit-Down Strike. Facing freezing temperatures and police confrontation — including the \"Battle of the Running Bulls\" — strikers held firm until GM recognized the UAW. It was a pivotal moment that reshaped American labor rights forever.",
   },
-  {
-    id: "atwood-stadium",
-    title: "Atwood Stadium",
-    image: "/historic/Kennedy.jpg",
-    images: ["/historic/Kennedy.jpg", "/historic/Atwood.jpg"],
-    tags: ["Athletics", "JFK Rally 1960", "FDR Rally 1936"],
-    latitude: 43.0172,
-    longitude: -83.7023,
-    description:
-      "Historic 11,000-seat stadium at 701 University Ave in Flint's Carriage Town district, owned by Kettering University. A stage for Flint's greatest moments: President Franklin D. Roosevelt drew a massive crowd here in 1936, and Senator John F. Kennedy electrified 13,000 supporters at a campaign rally in September 1960 — weeks before winning the presidency.",
-  },
+  // {
+  //   id: "atwood-stadium",
+  //   title: "Atwood Stadium",
+  //   image: "/historic/Kennedy.jpg",
+  //   images: ["/historic/Kennedy.jpg", "/historic/Atwood.jpg"],
+  //   tags: ["Athletics", "JFK Rally 1960", "FDR Rally 1936"],
+  //   latitude: 43.0172,
+  //   longitude: -83.7023,
+  //   description:
+  //     "Historic 11,000-seat stadium at 701 University Ave in Flint's Carriage Town district, owned by Kettering University. A stage for Flint's greatest moments: President Franklin D. Roosevelt drew a massive crowd here in 1936, and Senator John F. Kennedy electrified 13,000 supporters at a campaign rally in September 1960 — weeks before winning the presidency.",
+  // },
 ];
 
 /** Current events — “What’s Happening Now” */
